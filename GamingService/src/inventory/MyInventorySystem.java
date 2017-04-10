@@ -46,6 +46,13 @@ public class MyInventorySystem implements InventorySystem {
     }
 
     /**
+     * check Weight
+     */
+    private void checkWeight() {
+
+    }
+
+    /**
      *
      * @param Item
      */
@@ -91,8 +98,17 @@ public class MyInventorySystem implements InventorySystem {
                 if (inventory.get(i) == null) {
                     for (int ii = 0; ii < MyInventorySystem.itemCollection.size(); ii++) {
                         if (itemCollection.get(ii).getName().equals(addName)) {
-                            inventory.put(i, itemCollection.get(ii));
-                            ii = MyInventorySystem.itemCollection.size();
+                            if (Inventory.actWeight + itemCollection.get(ii).getWeight() <= Inventory.getMAXweight()){
+                                Inventory.actWeight = Inventory.actWeight + itemCollection.get(ii).getWeight();
+                                inventory.put(i, itemCollection.get(ii));
+                                ii = MyInventorySystem.itemCollection.size();
+                            }
+                            else if (Inventory.actWeight + itemCollection.get(ii).getWeight() >= Inventory.getMAXweight()){
+                                System.out.println("Maximal weight of the inventory has been exceeded, item was not added.");
+                                System.out.println("Please delete an item.");
+                                updateInventory();
+                                removeItemFromInventory();
+                            }
                         }
                     }
 
@@ -115,6 +131,7 @@ public class MyInventorySystem implements InventorySystem {
         String removeName = askUserForName("remove");
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getName().equals(removeName)) {
+                Inventory.actWeight = Inventory.actWeight - inventory.get(i).getWeight();
                 inventory.remove(i);
                 i = inventory.size();
             }
@@ -137,15 +154,12 @@ public class MyInventorySystem implements InventorySystem {
                 System.out.println("------------------------------------");
             }
         }
+        System.out.println("Inventory-Weight: " + Inventory.actWeight);
+        System.out.println("------------------------------------");
     }
 
     @Override
     public void reconfigureInventory() {
-
-    }
-
-    @Override
-    public void calculateValue() {
 
     }
 
