@@ -77,7 +77,7 @@ public class MyInventorySystem implements InventorySystem {
 
     @Override
     public String askUserForName(String action) throws IOException {
-        System.out.println("Input the name of the Item to " + action + ":");
+        System.out.println("Input the name of the Item to " + action + " it:");
         String input = reader.readLine();
         return input;
     }
@@ -100,8 +100,9 @@ public class MyInventorySystem implements InventorySystem {
             }
         }
         else if (inventory.size() >= Inventory.getMAXvolume()){
-            updateInventory();
-            System.out.println("Cant added Item because of to much volume");
+            System.out.println("///////////////////////////////////////////////////");
+            System.out.println("/////Cant added Item because of to much volume/////");
+            System.out.println("///////////////////////////////////////////////////");
             removeItemFromInventory();
         }
         updateInventory();
@@ -111,7 +112,7 @@ public class MyInventorySystem implements InventorySystem {
 
     @Override
     public void removeItemFromInventory() throws IOException {
-        String removeName = askUserForName("delete");
+        String removeName = askUserForName("remove");
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getName().equals(removeName)) {
                 inventory.remove(i);
@@ -127,12 +128,14 @@ public class MyInventorySystem implements InventorySystem {
     @Override
     public void updateInventory() {
         System.out.println("-----------Inventory-----------");
-        for (int ii = 0; ii < inventory.size(); ii++) {
-            System.out.println("Key ==> " + ii);
-            System.out.println("Name ==> " + inventory.get(ii).getName());
-            System.out.println("Value ==> " +inventory.get(ii).getValue());
-            System.out.println("Weight ==> " +inventory.get(ii).getWeight());
-            System.out.println("------------------------------------");
+        for (int i = 0; i < Inventory.getMAXvolume(); i++) {
+            if (inventory.get(i) != null){
+                System.out.println("Key ==> " + i);
+                System.out.println("Name ==> " + inventory.get(i).getName());
+                System.out.println("Value ==> " +inventory.get(i).getValue());
+                System.out.println("Weight ==> " +inventory.get(i).getWeight());
+                System.out.println("------------------------------------");
+            }
         }
     }
 
