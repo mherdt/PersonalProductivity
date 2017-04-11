@@ -46,6 +46,13 @@ public class MyInventorySystem implements InventorySystem {
     }
 
     /**
+     * check Weight
+     */
+    private void checkWeight() {
+
+    }
+
+    /**
      *
      * @param Item
      */
@@ -77,7 +84,7 @@ public class MyInventorySystem implements InventorySystem {
 
     @Override
     public String askUserForName(String action) throws IOException {
-        System.out.println("Input the name of the Item to " + action + ":");
+        System.out.println("Input the name of the Item to " + action + " it:");
         String input = reader.readLine();
         return input;
     }
@@ -91,8 +98,17 @@ public class MyInventorySystem implements InventorySystem {
                 if (inventory.get(i) == null) {
                     for (int ii = 0; ii < MyInventorySystem.itemCollection.size(); ii++) {
                         if (itemCollection.get(ii).getName().equals(addName)) {
-                            inventory.put(i, itemCollection.get(ii));
-                            ii = MyInventorySystem.itemCollection.size();
+                            if (Inventory.actWeight + itemCollection.get(ii).getWeight() <= Inventory.getMAXweight()){
+                                Inventory.actWeight = Inventory.actWeight + itemCollection.get(ii).getWeight();
+                                inventory.put(i, itemCollection.get(ii));
+                                ii = MyInventorySystem.itemCollection.size();
+                            }
+                            else if (Inventory.actWeight + itemCollection.get(ii).getWeight() >= Inventory.getMAXweight()){
+                                System.out.println("Maximal weight of the inventory has been exceeded, item was not added.");
+                                System.out.println("Please delete an item.");
+                                updateInventory();
+                                removeItemFromInventory();
+                            }
                         }
                     }
 
@@ -100,8 +116,9 @@ public class MyInventorySystem implements InventorySystem {
             }
         }
         else if (inventory.size() >= Inventory.getMAXvolume()){
-            updateInventory();
-            System.out.println("Cant added Item because of to much volume");
+            System.out.println("///////////////////////////////////////////////////");
+            System.out.println("/////Cant added Item because of to much volume/////");
+            System.out.println("///////////////////////////////////////////////////");
             removeItemFromInventory();
         }
         updateInventory();
@@ -111,9 +128,10 @@ public class MyInventorySystem implements InventorySystem {
 
     @Override
     public void removeItemFromInventory() throws IOException {
-        String removeName = askUserForName("delete");
+        String removeName = askUserForName("remove");
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getName().equals(removeName)) {
+                Inventory.actWeight = Inventory.actWeight - inventory.get(i).getWeight();
                 inventory.remove(i);
                 i = inventory.size();
             }
@@ -127,22 +145,21 @@ public class MyInventorySystem implements InventorySystem {
     @Override
     public void updateInventory() {
         System.out.println("-----------Inventory-----------");
-        for (int ii = 0; ii < inventory.size(); ii++) {
-            System.out.println("Key ==> " + ii);
-            System.out.println("Name ==> " + inventory.get(ii).getName());
-            System.out.println("Value ==> " +inventory.get(ii).getValue());
-            System.out.println("Weight ==> " +inventory.get(ii).getWeight());
-            System.out.println("------------------------------------");
+        for (int i = 0; i < Inventory.getMAXvolume(); i++) {
+            if (inventory.get(i) != null){
+                System.out.println("Key ==> " + i);
+                System.out.println("Name ==> " + inventory.get(i).getName());
+                System.out.println("Value ==> " +inventory.get(i).getValue());
+                System.out.println("Weight ==> " +inventory.get(i).getWeight());
+                System.out.println("------------------------------------");
+            }
         }
+        System.out.println("Inventory-Weight: " + Inventory.actWeight);
+        System.out.println("------------------------------------");
     }
 
     @Override
     public void reconfigureInventory() {
-
-    }
-
-    @Override
-    public void calculateValue() {
 
     }
 

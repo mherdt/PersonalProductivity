@@ -51,11 +51,5 @@ public interface InventorySystem {
      */
     public void reconfigureInventory();
 
-    /**
-     *
-     *
-     *
-     */
-    public void calculateValue();
 
 }
